@@ -21,14 +21,30 @@ var reservations = [{
   routeName: "yoda",
   name: "Yoda",
   email: "yoda@gmail.com",
-  phone: 8009602135,
-  uniqueID: 1
+  phone: "800-960-2135",
+  uniqueID: "0"
 }, {
     routeName:"darth",
     name: "Darthmaul",
     email: "Jedi@gmail.com",
-    phone: 8009432311,
-    uniqueID: 2
+    phone: "303-234-3456",
+    uniqueID: "1"
+}];
+
+// Array to store waitingList
+var waitingList = [{
+    name: "Michael",
+    email: "mike@gmail.com",
+    phone: "231-123-0012",
+    uniqueID: "2",
+}];
+
+// Array to store tableList
+var tableList = [{
+    name: "Ahmed",
+    email: "ahmed@gmail.com",
+    phone: "321-231-1234",
+    uniqueID: "3",
 }];
 
 // Routes
@@ -65,16 +81,16 @@ app.get("/api/:reservations?", function(req, res) {
   return res.json(reservations);
 });
 
-// Create New Characters - takes in JSON input
+// Create New Reservation - takes in JSON input
 app.post("/api/new", function(req, res) {
-  var newcharacter = req.body;
-  newcharacter.routeName = newcharacter.name.replace(/\s+/g, "").toLowerCase();
+  var newReservation = req.body;
+  newReservation.routeName = newReservation.name.replace(/\s+/g, "").toLowerCase();
 
-  console.log(newcharacter);
+  console.log(newReservation);
 
-  characters.push(newcharacter);
+  characters.push(newReservation);
 
-  res.json(newcharacter);
+  res.json(newReservation);
 });
 
 // Starts the server to begin listening
@@ -82,3 +98,5 @@ app.post("/api/new", function(req, res) {
 app.listen(PORT, function() {
   console.log("App listening on PORT " + PORT);
 });
+
+// Takes reservations inf
