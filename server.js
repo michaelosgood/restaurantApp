@@ -1,102 +1,73 @@
 // Dependencies
 // =============================================================
-var express = require("express");
-var bodyParser = require("body-parser");
-var path = require("path");
-
+var express = require('express');
+var bodyParser = require('body-parser');
+var path = require('path');
 // Sets up the Express App
 // =============================================================
 var app = express();
-var PORT = 3000;
-
+var PORT = process.env.PORT || 3000;
 // Sets up the Express app to handle data parsing
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.text());
-app.use(bodyParser.json({ type: "application/vnd.api+json" }));
-
+app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
 // Reservations (DATA)
 // =============================================================
 var reservations = [{
-  routeName: "yoda",
-  name: "Yoda",
-  email: "yoda@gmail.com",
-  phone: "800-960-2135",
-  uniqueID: "0"
+  customerName: 'Yoda',
+  customerEmail: 'yoda@gmail.com',
+  phoneNumber: 8009602135,
+  customerID: 'yoda 2'
 }, {
-    routeName:"darth",
-    name: "Darthmaul",
-    email: "Jedi@gmail.com",
-    phone: "303-234-3456",
-    uniqueID: "1"
+    customerName: 'Darthmaul',
+    customerEmail: 'Jedi@gmail.com',
+    phoneNumber: 8009432311,
+    customerID: 2
 }];
 
-// Array to store waitingList
-var waitingList = [{
-    name: "Michael",
-    email: "mike@gmail.com",
-    phone: "231-123-0012",
-    uniqueID: "2",
-}];
-
-// Array to store tableList
-var tableList = [{
-    name: "Ahmed",
-    email: "ahmed@gmail.com",
-    phone: "321-231-1234",
-    uniqueID: "3",
-}];
-
+var waitingList = [];
 // Routes
 // =============================================================
-
 // Basic route that sends the user first to the AJAX Page
-app.get("/", function(req, res) {
-  res.sendFile(path.join(__dirname, "index.html"));
+app.get('/', function(req, res) {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+app.get('/reserve', function(req, res) {
+  res.sendFile(path.join(__dirname, 'reserve.html'));
 });
 
-app.get("/reserve", function(req, res) {
-  res.sendFile(path.join(__dirname, "reserve.html"));
-});
+app.get('/tables', function(req, res) {
+    res.sendFile(path.join(__dirname, 'index.html'));
+  });
 
-// Get all Reservations
-app.get("/tables", function(req, res) {
-res.sendFile(path.join(__dirname, "tables.html"));
-});
 
-// Search for Specific Character (or all characters) - provides JSON
-app.get("/api/:reservations?", function(req, res) {
-  var chosen = req.params.characters;
-
-  if (chosen) {
-    console.log(chosen);
-
-    for (var i = 0; i < reservations.length; i++) {
-      if (chosen === reservations[i].routeName) {
-        return res.json(reservations[i]);
-      }
-    }
-    return res.json(false);
-  }
+// Search for Specific Reservation (or all reservations) - provides JSON
+app.get('/api/reservations', function(req, res) {
   return res.json(reservations);
 });
 
-// Create New Reservation - takes in JSON input
-app.post("/api/new", function(req, res) {
+app.get('/api/waitingList', function(req, res) {
+    return res.json(waitingList);
+  });
+
+// Create New reservations - takes in JSON input
+app.post('/api/tables', function(req, res) {
   var newReservation = req.body;
-  newReservation.routeName = newReservation.name.replace(/\s+/g, "").toLowerCase();
-
-  console.log(newReservation);
-
-  characters.push(newReservation);
-
-  res.json(newReservation);
+  newReservation.customerName = newReservation.customerName.replace(/\s+/g, '').toLowerCase();
+  if (reservations.length < 3) {
+    reservations.push(newReservation);
+    console.log(reservations);
+    // res.json(reservations);
+    res.json(true);
+  } else {
+    waitingList.push(newReservation);
+    console.log(waitingList);
+    res.json(false);
+  }
 });
-
 // Starts the server to begin listening
 // =============================================================
 app.listen(PORT, function() {
-  console.log("App listening on PORT " + PORT);
+  console.log('App listening on PORT ' + PORT);
 });
-
-// Takes reservations inf
